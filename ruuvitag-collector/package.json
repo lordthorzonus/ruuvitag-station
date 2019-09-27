@@ -1,0 +1,54 @@
+{
+  "name": "ruuvitag-collector",
+  "version": "1.0.0",
+  "description": "Collector for ruuvitag data",
+  "main": "ts-node src/index.js",
+  "scripts": {
+    "test": "test",
+    "start": "ts-node src/index.ts"
+  },
+  "keywords": [
+    "ruuvitag",
+    "iot",
+    "bluetooth",
+    "ble",
+    "low",
+    "energy"
+  ],
+  "author": "Juuso Leinonen",
+  "license": "MIT",
+  "dependencies": {
+    "@types/noble": "0.0.39",
+    "noble": "^1.9.1",
+    "ts-node": "^8.4.1",
+    "typescript": "^3.6.3",
+    "xpc-connection": "git://github.com/taoyuan/node-xpc-connection.git"
+  },
+  "devDependencies": {
+    "@types/jest": "^24.0.18",
+    "jest": "^24.9.0",
+    "ts-jest": "^24.1.0",
+    "tslint": "^5.20.0"
+  },
+  "jest": {
+    "moduleFileExtensions": [
+      "ts",
+      "js"
+    ],
+    "transform": {
+      "^.+\\.(ts|tsx)$": "ts-jest"
+    },
+    "testMatch": [
+      "<rootDir>/src/**/*.test.(ts|js)"
+    ],
+    "coverageReporters": [
+      "text",
+      "html"
+    ],
+    "collectCoverageFrom": [
+      "src/**/*.{js,ts}",
+      "!**/*.{test|d}.{js,ts}"
+    ],
+    "testEnvironment": "node"
+  }
+}
