@@ -1,22 +1,14 @@
-import { RuuviTagParsingStrategy, RuuviTagSensorData } from './index';
+import { RuuviTagParsingStrategy } from './index';
+import { parseValueFromHexString, ValueOffset } from './parse-value-from-hex-string';
 
-type MeasurementOffset = [number, number];
-
-const ManufacturerIdOffset: MeasurementOffset = [0, 4];
-const DataFormatOffset: MeasurementOffset = [4, 6];
-const HumidityOffset: MeasurementOffset = [6, 8];
-const TemperatureBaseOffset: MeasurementOffset = [8, 10];
-const TemperatureFractionOffset: MeasurementOffset = [10, 12];
-const PressureOffset: MeasurementOffset = [12, 16];
-const AccelerationXOffset: MeasurementOffset = [16, 20];
-const AccelerationYOffset: MeasurementOffset = [20, 24];
-const AccelerationZOffset: MeasurementOffset = [24, 28];
-const BatteryOffset: MeasurementOffset = [28, 32];
-
-const parseMeasurementFromDataString = (rawDataString: string, dataOffset: MeasurementOffset): number => {
-    const hexadecimalRadix = 16;
-    return parseInt(rawDataString.substring(dataOffset[0], dataOffset[1]), hexadecimalRadix);
-};
+const HumidityOffset: ValueOffset = [6, 8];
+const TemperatureBaseOffset: ValueOffset = [8, 10];
+const TemperatureFractionOffset: ValueOffset = [10, 12];
+const PressureOffset: ValueOffset = [12, 16];
+const AccelerationXOffset: ValueOffset = [16, 20];
+const AccelerationYOffset: ValueOffset = [20, 24];
+const AccelerationZOffset: ValueOffset = [24, 28];
+const BatteryOffset: ValueOffset = [28, 32];
 
 /**
  * Parses the acceleration data from the payload.
@@ -24,7 +16,7 @@ const parseMeasurementFromDataString = (rawDataString: string, dataOffset: Measu
  *
  * Returns values in G.
  */
-const parseAcceleration = (rawDataString: string, dataOffset: MeasurementOffset): number => {
+const parseAcceleration = (rawDataString: string, dataOffset: ValueOffset): number => {
     const twosComplement = (value: number): number => {
         const isValueNegative = (value & 0x8000) > 0;
         const max16IntValue = 0x10000;
@@ -32,7 +24,7 @@ const parseAcceleration = (rawDataString: string, dataOffset: MeasurementOffset)
         return isValueNegative ? (value - max16IntValue) : value;
     };
 
-    const acceleration = twosComplement(parseMeasurementFromDataString(rawDataString, dataOffset));
+    const acceleration = twosComplement(parseValueFromHexString(rawDataString, dataOffset));
     return acceleration / 1000;
 };
 
@@ -43,12 +35,12 @@ const parseAcceleration = (rawDataString: string, dataOffset: MeasurementOffset)
  * Returns the value in Celsius (C).
  */
 const parseTemperature = (rawDataString: string): number => {
-    const temperatureByte = parseMeasurementFromDataString(rawDataString, TemperatureBaseOffset);
+    const temperatureByte = parseValueFromHexString(rawDataString, TemperatureBaseOffset);
 
     // First bit is the sign bit which tells if the temperature is negative.
     const temperatureBase = temperatureByte & 0x7F;
     const isTemperatureNegative = ((temperatureByte >> 7) & 1) === 1;
-    const temperatureFraction = parseMeasurementFromDataString(rawDataString, TemperatureFractionOffset) / 100;
+    const temperatureFraction = parseValueFromHexString(rawDataString, TemperatureFractionOffset) / 100;
 
     const temperature = temperatureBase + temperatureFraction;
 
@@ -62,7 +54,7 @@ const parseTemperature = (rawDataString: string): number => {
  * Returns the value in percents (%)
  */
 const parseRelativeHumidity = (rawDataString: string): number => {
-    return parseMeasurementFromDataString(rawDataString, HumidityOffset) * 0.5;
+    return parseValueFromHexString(rawDataString, HumidityOffset) * 0.5;
 };
 
 /**
@@ -71,7 +63,7 @@ const parseRelativeHumidity = (rawDataString: string): number => {
  * Returns the value in Volts (V).
  */
 const parseBatteryVoltage = (rawDataString: string): number => {
-    return parseMeasurementFromDataString(rawDataString, BatteryOffset) / 1000;
+    return parseValueFromHexString(rawDataString, BatteryOffset) / 1000;
 };
 
 /**
@@ -88,7 +80,7 @@ const parseBatteryVoltage = (rawDataString: string): number => {
  */
 const parsePressure = (rawDataString: string): number => {
     const minimumSupportedPascalMeasurement = 50000;
-    return parseMeasurementFromDataString(rawDataString, PressureOffset) + minimumSupportedPascalMeasurement;
+    return parseValueFromHexString(rawDataString, PressureOffset) + minimumSupportedPascalMeasurement;
 };
 
 /**
