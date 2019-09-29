@@ -14,7 +14,7 @@ const BatteryOffset: ValueOffset = [28, 32];
  * Parses the acceleration data from the payload.
  * Values are 2-complement 16 bit signed integers. All channels are identical.
  *
- * Returns values in G.
+ * @return Returns values in G.
  */
 const parseAcceleration = (rawDataString: string, dataOffset: ValueOffset): number => {
     const twosComplement = (value: number): number => {
@@ -32,7 +32,7 @@ const parseAcceleration = (rawDataString: string, dataOffset: ValueOffset): numb
  * Parses the temperature from the payload.
  * Temperature is divided in base temperature which is a signed byte and fractions.
  *
- * Returns the value in Celsius (C).
+ * @return Returns the value in Celsius (C).
  */
 const parseTemperature = (rawDataString: string): number => {
     const temperatureByte = parseValueFromHexString(rawDataString, TemperatureBaseOffset);
@@ -51,7 +51,7 @@ const parseTemperature = (rawDataString: string): number => {
  * Parses the humidity from the payload.
  * One lsb is 0.5%, e.g. 128 is 64%. Values above 200 (100%) indicate a fault in sensor.
  *
- * Returns the value in percents (%)
+ * @return Returns the value in percents (%)
  */
 const parseRelativeHumidity = (rawDataString: string): number => {
     return parseValueFromHexString(rawDataString, HumidityOffset) * 0.5;
@@ -60,7 +60,7 @@ const parseRelativeHumidity = (rawDataString: string): number => {
 /**
  * Parses the battery voltage from the payload.
  *
- * Returns the value in Volts (V).
+ * @return Returns the value in Volts (V).
  */
 const parseBatteryVoltage = (rawDataString: string): number => {
     return parseValueFromHexString(rawDataString, BatteryOffset) / 1000;
@@ -76,7 +76,7 @@ const parseBatteryVoltage = (rawDataString: string): number => {
  * 51325	101325 Pa (average sea-level pressure)
  * 65536	115536 Pa
  *
- * Returns the pressure in Pascals (Pa).
+ * @return Returns the pressure in Pascals (Pa).
  */
 const parsePressure = (rawDataString: string): number => {
     const minimumSupportedPascalMeasurement = 50000;
