@@ -1,4 +1,4 @@
-import { calculateAccelerationVector } from './acceleration-vector-calculator';
+import { calculateAccelerationVectorLength } from './acceleration-vector-calculator';
 
 describe('Acceleration calculator', () => {
     /**
@@ -14,7 +14,7 @@ describe('Acceleration calculator', () => {
     it.each(testCases)(
         'should calculate the acceleration vector length: accelerationX: %s, acceletarionY: %s, accelerationZ %s should produce a vector length of: %s',
         (accelerationX, acceletarionY, accelerationZ, expectedLength) => {
-            expect(calculateAccelerationVector(accelerationX, acceletarionY, accelerationZ)).toEqual(expectedLength);
+            expect(calculateAccelerationVectorLength(accelerationX, acceletarionY, accelerationZ)).toEqual(expectedLength);
         }
     );
 });
