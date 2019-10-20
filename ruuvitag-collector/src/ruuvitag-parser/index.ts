@@ -1,3 +1,4 @@
+import { ruuviTagManufacturerId, validateRuuviTag } from '../ruuvitag-validator';
 import DataFormat3ParsingStrategy from './data-format-3-parsing-strategy';
 import { parseValueFromHexString, ValueOffset } from './parse-value-from-hex-string';
 
@@ -31,11 +32,10 @@ const DataFormatParsingStrategyMap = new Map<RuuvitagSensorProtocolDataFormat, R
 ]);
 
 const validate = (rawRuuviTagData: Buffer) => {
-    const ruuviTagManufacturerId = 0x0499;
     const rawRuuviTagString = rawRuuviTagData.toString('hex');
     const manufacturerId = parseValueFromHexString(rawRuuviTagString, ManufacturerIdOffset);
 
-    if (ruuviTagManufacturerId !== manufacturerId) {
+    if (!validateRuuviTag(rawRuuviTagData)) {
         throw Error(
             `Not a valid RuuviTag payload. Got manufacturerId: ${manufacturerId}, expected: ${ruuviTagManufacturerId}`,
         );

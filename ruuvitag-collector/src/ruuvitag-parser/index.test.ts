@@ -7,7 +7,7 @@ import parse, { RuuviTagParsingStrategy } from './index';
 
 describe('RuuviTagParser', () => {
     const ruuviTagDataParsingStrategyMap: Array<[string, RuuviTagParsingStrategy]> = [
-        ['049903291A1ECE1EFC18F94202CA0B53', DataFormat3ParsingStrategy],
+        ['990403291A1ECE1EFC18F94202CA0B53', DataFormat3ParsingStrategy],
     ];
 
     it.each(ruuviTagDataParsingStrategyMap)
@@ -24,7 +24,7 @@ describe('RuuviTagParser', () => {
     );
 
     it('should throw an error if the data given does not have corresponding data parsing strategy', () => {
-        const ruuviTagData = Buffer.from('049906291A1ECE1EFC18F94202CA0B53', 'hex');
+        const ruuviTagData = Buffer.from('990406291A1ECE1EFC18F94202CA0B53', 'hex');
 
         expect(() => parse(ruuviTagData)).toThrowError(
             new Error('Unsupported data format, got a payload containing data format: 6'),
