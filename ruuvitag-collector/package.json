@@ -18,11 +18,12 @@
   "author": "Juuso Leinonen",
   "license": "MIT",
   "dependencies": {
+    "@types/lodash": "^4.14.141",
     "@types/noble": "0.0.39",
+    "lodash": "^4.17.15",
     "noble": "^1.9.1",
     "ts-node": "^8.4.1",
-    "typescript": "^3.6.3",
-    "xpc-connection": "git://github.com/taoyuan/node-xpc-connection.git"
+    "typescript": "^3.6.3"
   },
   "devDependencies": {
     "@types/jest": "^24.0.18",
