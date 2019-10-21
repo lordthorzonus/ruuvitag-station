@@ -34,7 +34,7 @@ describe('RuuviTagParser', () => {
         const ruuviTagData = Buffer.from('048806291A1ECE1EFC18F94202CA0B53', 'hex');
 
         expect(() => parse(ruuviTagData)).toThrowError(
-            new Error('Not a valid RuuviTag payload. Got manufacturerId: 1160, expected: 1177'),
+            new Error('Not a valid RuuviTag payload. Got manufacturerId: 0x488, expected: 0x9904'),
         );
     });
 });

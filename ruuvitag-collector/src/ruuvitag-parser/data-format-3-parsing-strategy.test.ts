@@ -4,7 +4,7 @@ import { RuuviTagSensorData } from './index';
 describe('Data Format 3 Parsing Strategy', () => {
     const testCases: Array<[string, RuuviTagSensorData]> = [
         [
-            '049903291A1ECE1EFC18F94202CA0B53',
+            '990403291A1ECE1EFC18F94202CA0B53',
             {
                 temperature: 26.3,
                 pressure: 102766,
@@ -16,7 +16,7 @@ describe('Data Format 3 Parsing Strategy', () => {
             },
         ],
         [
-            '049903FF7F63FFFF7FFF7FFF7FFFFFFF',
+            '990403FF7F63FFFF7FFF7FFF7FFFFFFF',
             {
                 temperature: 127.99,
                 pressure: 115535,
@@ -28,7 +28,7 @@ describe('Data Format 3 Parsing Strategy', () => {
             },
         ],
         [
-            '04990300FF6300008001800180010000',
+            '99040300FF6300008001800180010000',
             {
                 temperature: -127.99,
                 pressure: 50000,

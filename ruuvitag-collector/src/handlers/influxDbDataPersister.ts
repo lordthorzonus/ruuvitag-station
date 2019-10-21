@@ -1,4 +1,3 @@
-import { Peripheral } from 'noble';
 import influxDB, { ruuviTagSensorDataMeasurementName } from '../infliux-db';
 import { EnhancedRuuviTagSensorData } from '../ruuvitag-sensor-data-decorator';
 

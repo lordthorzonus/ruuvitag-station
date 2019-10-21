@@ -10,7 +10,9 @@ export const calculateAccelerationVectorLength = (
 ): number => {
     const gravityValue = 0.981;
     const accelerationVectorLength = Math.sqrt(
-        Math.pow(accelerationX, 2) + Math.pow(accelerationY, 2) + Math.pow(accelerationZ - gravityValue, 2)
+        Math.pow(accelerationX, 2)
+        + Math.pow(accelerationY, 2)
+        + Math.pow(accelerationZ - gravityValue, 2),
     );
     return parseFloat(accelerationVectorLength.toFixed(1));
 };

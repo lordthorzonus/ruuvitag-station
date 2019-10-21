@@ -17,7 +17,10 @@ const updatedHandler: RuuviTagScannerEventHandler = (peripheral: Peripheral) => 
         updatedRuuviSensorDataLogger,
     );
 
-    return ruuviTagSensorDataInfluxDbPersister(peripheral.address, getEnhancedRuuviTagData(peripheral));
+    return ruuviTagSensorDataInfluxDbPersister(
+        peripheral.address,
+        getEnhancedRuuviTagData(peripheral),
+    );
 };
 
 export default {

@@ -1,4 +1,4 @@
-import { ruuviTagManufacturerId, validateRuuviTag } from '../ruuvitag-validator';
+import { ruuviTagManufacturerIdLeastSignificantByteFirst, validateRuuviTag } from '../ruuvitag-validator';
 import DataFormat3ParsingStrategy from './data-format-3-parsing-strategy';
 import { parseValueFromHexString, ValueOffset } from './parse-value-from-hex-string';
 
@@ -16,8 +16,6 @@ export interface RuuviTagParsingStrategy {
     parse: (rawRuuviTagData: Buffer) => RuuviTagSensorData;
 }
 
-export interface ValidRawRuuviTagData extends  Buffer {}
-
 enum RuuvitagSensorProtocolDataFormat {
     DataFormat3 = 0x03,
     DataFormat2And4 = 0x04,
@@ -31,14 +29,22 @@ const DataFormatParsingStrategyMap = new Map<RuuvitagSensorProtocolDataFormat, R
     [RuuvitagSensorProtocolDataFormat.DataFormat3, DataFormat3ParsingStrategy],
 ]);
 
+const throwNotValidManufacturerIdError = (manufacturerId: number) => {
+    throw Error(
+        `Not a valid RuuviTag payload. Got manufacturerId: 0x${
+            manufacturerId.toString(16)
+        }, expected: 0x${
+            ruuviTagManufacturerIdLeastSignificantByteFirst.toString(16)
+        }`,
+    );
+};
+
 const validate = (rawRuuviTagData: Buffer) => {
     const rawRuuviTagString = rawRuuviTagData.toString('hex');
     const manufacturerId = parseValueFromHexString(rawRuuviTagString, ManufacturerIdOffset);
 
     if (!validateRuuviTag(rawRuuviTagData)) {
-        throw Error(
-            `Not a valid RuuviTag payload. Got manufacturerId: ${manufacturerId}, expected: ${ruuviTagManufacturerId}`,
-        );
+        throwNotValidManufacturerIdError(manufacturerId);
     }
 };
 
