@@ -7,9 +7,5 @@
     "sourceMap": true,
     "outDir": "dist"
   },
-  "baseUrl": ".",
-  "paths": {
-    "noble/*": [ "./node_modules/@abandonware/noble/lib/*" ]
-  },
   "include": ["src/**/*.ts"]
 }

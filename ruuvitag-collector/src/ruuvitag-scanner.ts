@@ -1,6 +1,7 @@
+/// <reference path="./abandonware-noble.d.ts" />
+import * as noble from '@abandonware/noble';
+import { Peripheral } from '@abandonware/noble';
 import { EventEmitter } from 'events';
-import * as noble from 'noble';
-import { Peripheral } from 'noble';
 import { validateRuuviTag } from './ruuvitag-validator';
 
 export enum RuuviTagScannerEvents {
@@ -44,7 +45,6 @@ class RuuviTagScanner extends EventEmitter {
     private handleDiscoveredRuuviTag(peripheral: Peripheral): void {
         if (this.isRuuviTagRegistered(peripheral)) {
             this.emit(RuuviTagScannerEvents.RuuviTagUpdated, peripheral);
-
             return;
         }
 

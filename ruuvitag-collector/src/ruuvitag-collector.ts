@@ -10,4 +10,5 @@ export const run = (discoverHandler: RuuviTagScannerEventHandler, updatedHandler
     ruuviTagScanner.on(RuuviTagScannerEvents.RuuviTagUpdated, updatedHandler);
 
     ruuviTagScanner.startScanning();
+    console.log('Started collector');
 };

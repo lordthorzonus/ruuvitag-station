@@ -1,5 +1,5 @@
+import { Peripheral } from '@abandonware/noble';
 import { flow } from 'lodash';
-import { Peripheral } from 'noble';
 import parse from './ruuvitag-parser';
 import decorateRuuviTagSensorDataWithCalculatedValues, { EnhancedRuuviTagSensorData } from './ruuvitag-sensor-data-decorator';
 
@@ -20,7 +20,7 @@ export const transformPeripheralAdvertisementToRuuviTagMeasurement = (peripheral
     return {
         macAddress: peripheral.address,
         rssi: peripheral.rssi,
-        id: peripheral.uuid,
+        id: peripheral.id,
         time: new Date(),
         sensorData: getSensorData(peripheral.advertisement.manufacturerData),
     };

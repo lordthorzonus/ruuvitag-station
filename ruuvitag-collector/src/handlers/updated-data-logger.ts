@@ -1,6 +1,6 @@
-import { EnhancedRuuviTagSensorData } from '../ruuvitag-sensor-data-decorator';
+import { RuuviTagMeasurement } from '../transform-peripheral-advertisement-to-ruuvi-tag-measurement';
 
-export const updatedRuuviSensorDataLogger = (enhancedRuuviTagSensorData: EnhancedRuuviTagSensorData) => {
-    console.log('Got data :', enhancedRuuviTagSensorData);
-    return enhancedRuuviTagSensorData;
+export const updatedRuuviTagMeasurementLogger = (ruuviTagMeasurement: RuuviTagMeasurement) => {
+    console.log('Measurement: ', ruuviTagMeasurement);
+    return ruuviTagMeasurement;
 };
