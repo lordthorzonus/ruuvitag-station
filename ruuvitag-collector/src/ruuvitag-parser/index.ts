@@ -1,15 +1,22 @@
 import { ruuviTagManufacturerIdLeastSignificantByteFirst, validateRuuviTag } from '../ruuvitag-validator';
 import DataFormat3ParsingStrategy from './data-format-3-parsing-strategy';
+import DataFormat5ParsingStrategy from './data-format-5-parsing-strategy';
 import { parseValueFromHexString, ValueOffset } from './parse-value-from-hex-string';
 
+type Nullable<T> = T | null;
+
 export interface RuuviTagSensorData {
-    relativeHumidityPercentage: number;
-    temperature: number;
-    pressure: number;
-    accelerationX: number;
-    accelerationY: number;
-    accelerationZ: number;
-    batteryVoltage: number;
+    relativeHumidityPercentage: Nullable<number>;
+    temperature: Nullable<number>;
+    pressure: Nullable<number>;
+    accelerationX: Nullable<number>;
+    accelerationY: Nullable<number>;
+    accelerationZ: Nullable<number>;
+    batteryVoltage: Nullable<number>;
+    txPower: Nullable<number>;
+    movementCounter: Nullable<number>;
+    measurementSequence: Nullable<number>;
+    macAddress: Nullable<string>;
 }
 
 export interface RuuviTagParsingStrategy {
@@ -27,6 +34,7 @@ const DataFormatOffset: ValueOffset = [4, 6];
 
 const DataFormatParsingStrategyMap = new Map<RuuvitagSensorProtocolDataFormat, RuuviTagParsingStrategy>([
     [RuuvitagSensorProtocolDataFormat.DataFormat3, DataFormat3ParsingStrategy],
+    [RuuvitagSensorProtocolDataFormat.DataFormat5, DataFormat5ParsingStrategy],
 ]);
 
 const throwNotValidManufacturerIdError = (manufacturerId: number) => {

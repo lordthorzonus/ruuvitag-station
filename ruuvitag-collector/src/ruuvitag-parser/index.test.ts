@@ -1,13 +1,16 @@
 import Mock = jest.Mock;
 
 jest.mock('./data-format-3-parsing-strategy');
+jest.mock('./data-format-5-parsing-strategy');
 
 import DataFormat3ParsingStrategy from './data-format-3-parsing-strategy';
+import DataFormat5ParsingStrategy from './data-format-5-parsing-strategy';
 import parse, { RuuviTagParsingStrategy } from './index';
 
 describe('RuuviTagParser', () => {
     const ruuviTagDataParsingStrategyMap: Array<[string, RuuviTagParsingStrategy]> = [
         ['990403291A1ECE1EFC18F94202CA0B53', DataFormat3ParsingStrategy],
+        ['9904058001000000008001800180010000000000CBB8334C884F', DataFormat5ParsingStrategy],
     ];
 
     it.each(ruuviTagDataParsingStrategyMap)

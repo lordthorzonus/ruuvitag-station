@@ -11,7 +11,7 @@ const AccelerationZOffset: ValueOffset = [24, 28];
 const BatteryOffset: ValueOffset = [28, 32];
 
 /**
- * Parses the acceleration data from the payload.
+ * Parses the acceleration data from the advertisement.
  * Values are 2-complement 16 bit signed integers. All channels are identical.
  *
  * @return Returns values in G.
@@ -29,7 +29,7 @@ const parseAcceleration = (rawDataString: string, dataOffset: ValueOffset): numb
 };
 
 /**
- * Parses the temperature from the payload.
+ * Parses the temperature from the advertisement.
  * Temperature is divided in base temperature which is a signed byte and fractions.
  *
  * @return Returns the value in Celsius (C).
@@ -48,7 +48,7 @@ const parseTemperature = (rawDataString: string): number => {
 };
 
 /**
- * Parses the humidity from the payload.
+ * Parses the humidity from the advertisement.
  * One lsb is 0.5%, e.g. 128 is 64%. Values above 200 (100%) indicate a fault in sensor.
  *
  * @return Returns the value in percents (%)
@@ -58,7 +58,7 @@ const parseRelativeHumidity = (rawDataString: string): number => {
 };
 
 /**
- * Parses the battery voltage from the payload.
+ * Parses the battery voltage from the advertisement.
  *
  * @return Returns the value in Volts (V).
  */
@@ -67,7 +67,7 @@ const parseBatteryVoltage = (rawDataString: string): number => {
 };
 
 /**
- * Parses the Atmospheric pressure from the payload.
+ * Parses the Atmospheric pressure from the advertisement.
  * Values supported by the RuuviTag are 50000 Pa to 115536 Pa in 1 Pa increments.
  *
  * Example:
@@ -99,6 +99,10 @@ const DataFormat3ParsingStrategy: RuuviTagParsingStrategy = {
             relativeHumidityPercentage: parseRelativeHumidity(rawRuuviTagDataString),
             pressure: parsePressure(rawRuuviTagDataString),
             temperature: parseTemperature(rawRuuviTagDataString),
+            measurementSequence: null,
+            movementCounter: null,
+            txPower: null,
+            macAddress: null,
         };
     },
 };

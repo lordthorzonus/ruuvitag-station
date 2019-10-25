@@ -1,4 +1,4 @@
-import DataFormat3ParsingStartegy from './data-format-3-parsing-strategy';
+import DataFormat3ParsingStrategy from './data-format-3-parsing-strategy';
 import { RuuviTagSensorData } from './index';
 
 describe('Data Format 3 Parsing Strategy', () => {
@@ -13,6 +13,10 @@ describe('Data Format 3 Parsing Strategy', () => {
                 accelerationY: -1.726,
                 accelerationZ: 0.714,
                 batteryVoltage: 2.899,
+                txPower: null,
+                measurementSequence: null,
+                movementCounter: null,
+                macAddress: null,
             },
         ],
         [
@@ -25,6 +29,10 @@ describe('Data Format 3 Parsing Strategy', () => {
                 accelerationY: 32.767,
                 accelerationZ: 32.767,
                 batteryVoltage: 65.535,
+                txPower: null,
+                measurementSequence: null,
+                movementCounter: null,
+                macAddress: null,
             },
         ],
         [
@@ -37,6 +45,10 @@ describe('Data Format 3 Parsing Strategy', () => {
                 accelerationY: -32.767,
                 accelerationZ: -32.767,
                 batteryVoltage: 0.000,
+                txPower: null,
+                measurementSequence: null,
+                movementCounter: null,
+                macAddress: null,
             },
         ],
     ];
@@ -45,7 +57,7 @@ describe('Data Format 3 Parsing Strategy', () => {
         'should parse the raw data %s to a valid RuuviTagSensorData',
         (rawStringData, expectedRuuviTagSensorData) => {
             const rawData = Buffer.from(rawStringData, 'hex');
-            expect(DataFormat3ParsingStartegy.parse(rawData)).toEqual(expectedRuuviTagSensorData);
+            expect(DataFormat3ParsingStrategy.parse(rawData)).toEqual(expectedRuuviTagSensorData);
         },
     );
 });

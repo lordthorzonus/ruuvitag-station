@@ -1,0 +1,11 @@
+version: '3.7'
+services:
+  rabbitmq:
+    image: 'rabbitmq:3.8.0-management'
+    ports:
+      - "5672:5672"
+      - "15672:15672"
+    volumes:
+      - ./rabbitmq:/var/lib/rabbitmq
+      - ./rabbitmq/logs:/var/log/rabbitmq
+    hostname: rabbitmq
