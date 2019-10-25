@@ -5,7 +5,13 @@
  *
  * @return Returns the humidex number integer.
  */
-export const calculateHumidex = (temperatureInCelsius: number, dewPointInCelsius: number): number => {
+export const calculateHumidex = (
+    temperatureInCelsius: number | null, dewPointInCelsius: number | null
+): number | null => {
+    if (temperatureInCelsius === null || dewPointInCelsius === null) {
+        return null;
+    }
+
     // Rounded constant based on molecular weight of water, latent heat of evaporation, and the universal gas constant.
     const constant = 5417.7530;
     const humidex = temperatureInCelsius

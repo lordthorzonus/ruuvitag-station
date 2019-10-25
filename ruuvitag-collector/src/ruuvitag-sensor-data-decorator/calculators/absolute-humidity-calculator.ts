@@ -16,11 +16,15 @@ const calculateVapourPressureOfWater = (temperatureInCelsius: number): number =>
  * @return Returns the value in (grams/m^3)
  */
 export const calculateAbsoluteHumidity = (
-    temperatureInCelsius: number,
-    relativeHumidityInPercents: number,
-): number => {
+    temperatureInCelsius: number | null,
+    relativeHumidityInPercents: number | null,
+): number | null => {
     const molarMassOfWater = 18.01534;
     const universalGasConstant = 8.31447215;
+
+    if (temperatureInCelsius === null || relativeHumidityInPercents === null) {
+        return null;
+    }
 
     const absoluteHumidity = (
         calculateVapourPressureOfWater(temperatureInCelsius)

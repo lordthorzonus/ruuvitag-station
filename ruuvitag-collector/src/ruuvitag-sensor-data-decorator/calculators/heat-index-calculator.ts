@@ -18,7 +18,11 @@ const HeatIndexConstantsCelsius = {
  *
  * @return Returns the HI in celsius.
  */
-export const calculateHeatIndex = (temperatureInCelsius: number, relativeHumidityInPercents: number) => {
+export const calculateHeatIndex = (temperatureInCelsius: number | null, relativeHumidityInPercents: number | null) => {
+    if (temperatureInCelsius === null || relativeHumidityInPercents === null) {
+        return null;
+    }
+
     const heatIndex = HeatIndexConstantsCelsius.c1
         + (HeatIndexConstantsCelsius.c2 * temperatureInCelsius)
         + (HeatIndexConstantsCelsius.c3 * relativeHumidityInPercents)

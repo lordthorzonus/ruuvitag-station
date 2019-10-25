@@ -6,11 +6,14 @@ describe('Absolute humidity point calculator', () => {
      *
      * @link http://www.michell.com/us/calculator/
      */
-    const testCases: Array<[number, number, number]> = [
+    const testCases: Array<[number | null, number | null, number | null]> = [
         [20, 10, 1.73],
         [8, 66, 5.45],
         [8, 30, 2.48],
         [23, 40, 8.22],
+        [null, 40, null],
+        [23, null, null],
+        [null, null, null],
     ];
 
     it.each(testCases)

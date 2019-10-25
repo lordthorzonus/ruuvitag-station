@@ -1,7 +1,7 @@
 import { parse16BitInteger, parse8BitInteger, ValueOffset } from './byte-utils';
-import { ruuviTagManufacturerIdLeastSignificantByteFirst, validateRuuviTag } from './ruuvitag-validator';
 import DataFormat3ParsingStrategy from './parsing-strategies/data-format-3-parsing-strategy';
 import DataFormat5ParsingStrategy from './parsing-strategies/data-format-5-parsing-strategy';
+import { ruuviTagManufacturerIdLeastSignificantByteFirst, validateRuuviTag } from './ruuvitag-validator';
 
 type Nullable<T> = T | null;
 

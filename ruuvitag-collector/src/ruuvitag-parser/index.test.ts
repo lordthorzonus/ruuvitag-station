@@ -3,9 +3,9 @@ import Mock = jest.Mock;
 jest.mock('./data-format-3-parsing-strategy');
 jest.mock('./data-format-5-parsing-strategy');
 
+import parse, { RuuviTagParsingStrategy } from './index';
 import DataFormat3ParsingStrategy from './parsing-strategies/data-format-3-parsing-strategy';
 import DataFormat5ParsingStrategy from './parsing-strategies/data-format-5-parsing-strategy';
-import parse, { RuuviTagParsingStrategy } from './index';
 
 describe('RuuviTagParser', () => {
     const ruuviTagDataParsingStrategyMap: Array<[string, RuuviTagParsingStrategy]> = [

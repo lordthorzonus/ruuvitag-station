@@ -7,12 +7,15 @@ describe('Dew point calculator', () => {
      * @link http://www.decatur.de/javascript/dew/index.html
      * @link http://www.dpcalc.org/
      */
-    const testCases: Array<[number, number, number]> = [
+    const testCases: Array<[number | null, number | null, number | null]> = [
         [20, 65, 13.2],
         [11.6, 88, 9.7],
         [13, 50, 2.8],
         [16, 69, 10.3],
         [20, 50, 9.3],
+        [null, 50, null],
+        [20, null, null],
+        [null, null, null],
     ];
 
     it.each(testCases)

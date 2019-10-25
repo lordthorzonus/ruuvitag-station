@@ -6,9 +6,13 @@
  *
  * @return Returns the Dew point in Celsius (C).
  */
-export const calculateDewPoint = (temperatureInCelsius: number, relativeHumidityInPercents: number) => {
+export const calculateDewPoint = (temperatureInCelsius: number | null, relativeHumidityInPercents: number| null) => {
     const constant1 = 243.12;
     const constant2 = 17.62;
+
+    if (temperatureInCelsius === null || relativeHumidityInPercents === null) {
+        return null;
+    }
 
     const dewPoint = constant1
         * (
