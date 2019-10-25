@@ -37,7 +37,7 @@ const parseAcceleration = (rawDataString: string, dataOffset: ValueOffset): numb
 const parseTemperature = (rawDataString: string): number => {
     const temperatureByte = parseValueFromHexString(rawDataString, TemperatureBaseOffset);
 
-    // First bit is the sign bit which tells if the temperature is negative.
+    // First bit is the sign bit, which tells if the temperature is negative.
     const temperatureBase = temperatureByte & 0x7F;
     const isTemperatureNegative = ((temperatureByte >> 7) & 1) === 1;
     const temperatureFraction = parseValueFromHexString(rawDataString, TemperatureFractionOffset) / 100;

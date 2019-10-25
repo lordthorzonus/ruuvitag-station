@@ -6,7 +6,6 @@ import { calculateHeatIndex } from './calculators/heat-index-calculator';
 import { calculateHumidex } from './calculators/humidex-calculator';
 
 export interface EnhancedRuuviTagSensorData extends RuuviTagSensorData {
-    time: Date;
     humidex: number;
     heatIndex: number;
     dewPoint: number;
@@ -20,7 +19,6 @@ const decorateRuuviTagSensorDataWithCalculatedValues = (
     const dewPoint = calculateDewPoint(ruuviTagSensorData.temperature, ruuviTagSensorData.relativeHumidityPercentage);
     return {
         ...ruuviTagSensorData,
-        time: new Date(),
         humidex: calculateHumidex(ruuviTagSensorData.temperature, dewPoint),
         heatIndex: calculateHeatIndex(ruuviTagSensorData.temperature, ruuviTagSensorData.relativeHumidityPercentage),
         dewPoint,

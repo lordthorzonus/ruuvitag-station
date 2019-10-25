@@ -4,8 +4,8 @@ import { Peripheral } from 'noble';
 import { validateRuuviTag } from './ruuvitag-validator';
 
 export enum RuuviTagScannerEvents {
-    DiscoveredRuuviTag = 'DISCOVERED_RUUVITAG',
-    RuuviTagUpdated = 'UPDATED_RUUVITAG',
+    DiscoveredRuuviTag = 'DISCOVERED_RUUVI_TAG',
+    RuuviTagUpdated = 'UPDATED_RUUVI_TAG',
 }
 
 class RuuviTagScanner extends EventEmitter {
@@ -18,7 +18,6 @@ class RuuviTagScanner extends EventEmitter {
 
     constructor() {
         super();
-        console.log('Started scanning');
     }
 
     public on(event: RuuviTagScannerEvents, listener: (peripheral: Peripheral) => void): this {
@@ -28,7 +27,6 @@ class RuuviTagScanner extends EventEmitter {
     public startScanning() {
         noble.on('discover', peripheral => this.onDiscover(peripheral));
         noble.on('stateChange', state => {
-            console.log('Noble state: ', state);
             if (state === 'poweredOn') {
                 noble.startScanning([], true);
             }

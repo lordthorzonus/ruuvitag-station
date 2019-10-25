@@ -1,7 +1,5 @@
 import { Peripheral } from 'noble';
-import parse from './ruuvitag-parser';
 import RuuviTagScanner, { RuuviTagScannerEvents } from './ruuvitag-scanner';
-import decorateRuuviTagSensorDataWithCalculatedValues from './ruuvitag-sensor-data-decorator';
 
 export type RuuviTagScannerEventHandler = (peripheral: Peripheral) => void;
 
