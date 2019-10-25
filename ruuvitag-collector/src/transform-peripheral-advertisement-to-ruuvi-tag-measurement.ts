@@ -17,11 +17,13 @@ const getSensorData = flow(
 );
 
 export const transformPeripheralAdvertisementToRuuviTagMeasurement = (peripheral: Peripheral): RuuviTagMeasurement => {
+    const sensorData = getSensorData(peripheral.advertisement.manufacturerData);
+
     return {
-        macAddress: peripheral.address,
+        macAddress: sensorData.macAddress || peripheral.address,
         rssi: peripheral.rssi,
         id: peripheral.id,
         time: new Date(),
-        sensorData: getSensorData(peripheral.advertisement.manufacturerData),
+        sensorData,
     };
 };

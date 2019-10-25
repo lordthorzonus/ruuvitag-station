@@ -1,5 +1,5 @@
-import { RuuviTagParsingStrategy } from './index';
-import { ValueOffset } from './parse-value-from-hex-string';
+import { parse16BitInteger, parse8BitInteger, twosComplement, ValueOffset } from '../byte-utils';
+import { RuuviTagParsingStrategy } from '../index';
 
 const TemperatureOffset: ValueOffset = [3, 4];
 const HumidityOffset: ValueOffset = [5, 6];
@@ -12,23 +12,12 @@ const MovementCounterOffset: ValueOffset = [17, 17];
 const MeasurementSequenceOffset: ValueOffset = [18, 19];
 const MacAddressOffset: ValueOffset = [20, 26];
 
-const parse16BitInteger = (rawData: Buffer, byteOffset: ValueOffset): number => {
-    return (rawData[byteOffset[0]] << 8 | rawData[byteOffset[1] & 0xFF]);
-};
-
 const isInvalidMeasurementForSigned16BitInteger = (value: number): boolean => {
     return value === 0x8000;
 };
 
 const isInvalidMeasurementForUnsigned16BitInteger = (value: number) => {
     return value === 0xFFFF;
-};
-
-const twosComplement = (value: number): number => {
-    const isValueNegative = (value & 0x8000) > 0;
-    const max16IntValue = 0x10000;
-
-    return isValueNegative ? (value - max16IntValue) : value;
 };
 
 /**
@@ -167,7 +156,7 @@ const parseTxPower = (rawData: Buffer): number | null => {
  * @return Movement counter as number
  */
 const parseMovementCounter = (rawData: Buffer): number | null => {
-    const movementCounter = rawData[MovementCounterOffset[0]] & 0xFF;
+    const movementCounter = parse8BitInteger(rawData, MovementCounterOffset);
     const max8BitValue = 255;
 
     if (movementCounter === max8BitValue) {
@@ -194,6 +183,11 @@ const parseMeasurementSequence = (rawData: Buffer): number | null => {
     return measurementSequence;
 };
 
+/**
+ * Parses the mac address from the advertisement.
+ *
+ * @return Returns the 48bit MAC address as string.
+ */
 const parseMacAddress = (rawData: Buffer): string | null => {
     const macAddressData = rawData.slice(MacAddressOffset[0], MacAddressOffset[1]);
     const invalidMacAddress = 'ffffffffffff';

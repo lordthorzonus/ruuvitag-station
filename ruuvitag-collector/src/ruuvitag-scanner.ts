@@ -2,7 +2,7 @@
 import * as noble from '@abandonware/noble';
 import { Peripheral } from '@abandonware/noble';
 import { EventEmitter } from 'events';
-import { validateRuuviTag } from './ruuvitag-validator';
+import { validateRuuviTag } from './ruuvitag-parser/ruuvitag-validator';
 
 export enum RuuviTagScannerEvents {
     DiscoveredRuuviTag = 'DISCOVERED_RUUVI_TAG',
