@@ -115,7 +115,7 @@ const parseAcceleration = (rawData: Buffer, accelerationOffset: ValueOffset): nu
 const parseBatteryVoltage = (rawData: Buffer): number | null => {
     const powerInfo = parse16BitInteger(rawData, PowerInfoOffset);
     const minimumVoltage = 1600;
-    const max11BitUnsignedInteger = 2047;
+    const max11BitUnsignedInteger = Math.pow(2, 11);
 
     const voltage = (powerInfo >>> 5);
 
@@ -157,7 +157,7 @@ const parseTxPower = (rawData: Buffer): number | null => {
  */
 const parseMovementCounter = (rawData: Buffer): number | null => {
     const movementCounter = parse8BitInteger(rawData, MovementCounterOffset);
-    const max8BitValue = 255;
+    const max8BitValue = Math.pow(2, 8);
 
     if (movementCounter === max8BitValue) {
         return null;
@@ -184,7 +184,8 @@ const parseMeasurementSequence = (rawData: Buffer): number | null => {
 };
 
 /**
- * Parses the mac address from the advertisement.
+ * Parses the mac address from the advertisement. In case that all the bits are set for the mac address
+ * we'll assume it's invalid/not available.
  *
  * @return Returns the 48bit MAC address as string.
  */
@@ -202,6 +203,10 @@ const parseMacAddress = (rawData: Buffer): string | null => {
     return macAddressArray ? macAddressArray.join(':') : null;
 };
 
+/**
+ * Parses the raw manufacturer specific data field according to the Data Format 5 Specification (RAWv2)
+ * @see https://github.com/ruuvi/ruuvi-sensor-protocols/blob/master/dataformat_05.md
+ */
 const DataFormat5ParsingStrategy: RuuviTagParsingStrategy = {
     parse(rawRuuviTagData) {
         return {
