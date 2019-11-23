@@ -1,4 +1,4 @@
-import { RuuviTagMeasurement } from '../transform-peripheral-advertisement-to-ruuvi-tag-measurement';
+import { RuuviTagMeasurement } from '../ruuvi-tag-measurement-transformer';
 
 export const updatedRuuviTagMeasurementLogger = (ruuviTagMeasurement: RuuviTagMeasurement) => {
     console.log('Measurement: ', ruuviTagMeasurement);

@@ -18,6 +18,10 @@ const calculateHumidexMock: Mock = require('./calculators/humidex-calculator').c
 describe('RuuviTag sensor data decorator', () => {
     it('should enhance the given ruuvitag sensor data with calculations', () => {
         const ruuviTagSensorData: RuuviTagSensorData = {
+            macAddress: '',
+            measurementSequence: 1,
+            movementCounter: 1,
+            txPower: 1,
             accelerationX: 1,
             accelerationY: 2,
             accelerationZ: 3,
