@@ -4,13 +4,15 @@ import * as uuid from 'uuid/v4';
 import parse from './ruuvitag-parser';
 import decorateRuuviTagSensorDataWithCalculatedValues, { EnhancedRuuviTagSensorData } from './ruuvitag-sensor-data-decorator';
 
+export interface RuuviTag {
+    macAddress: string;
+    id: string;
+    rssi: number;
+}
+
 export interface RuuviTagMeasurement {
     id: string;
-    peripheral: {
-        macAddress: string;
-        id: string;
-        rssi: number;
-    };
+    peripheral: RuuviTag;
     time: Date;
     sensorData: EnhancedRuuviTagSensorData;
 }

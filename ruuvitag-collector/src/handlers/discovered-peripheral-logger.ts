@@ -1,5 +1,6 @@
-import { RuuviTagScannerEventHandler } from '../ruuvitag-collector';
+import { RuuviTagMeasurement } from '../ruuvitag-measurement-transformer';
 
-export const discoveredPeripheralLogger: RuuviTagScannerEventHandler = peripheral => {
-    console.log('Discovered RuuviTag with id: ', peripheral.id);
+export const discoveredPeripheralLogger = (ruuviTagMeasurement: RuuviTagMeasurement) => {
+    console.log('Discovered RuuviTag: ', ruuviTagMeasurement.peripheral);
+    return ruuviTagMeasurement;
 };

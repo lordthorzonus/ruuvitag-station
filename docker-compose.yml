@@ -8,4 +8,3 @@ services:
     volumes:
       - ./rabbitmq:/var/lib/rabbitmq
       - ./rabbitmq/logs:/var/log/rabbitmq
-    hostname: rabbitmq
