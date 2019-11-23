@@ -1,5 +1,5 @@
-import DataFormat3ParsingStrategy from './data-format-3-parsing-strategy';
 import { RuuviTagSensorData } from '../index';
+import DataFormat3ParsingStrategy from './data-format-3-parsing-strategy';
 
 describe('Data Format 3 Parsing Strategy', () => {
     const testCases: Array<[string, RuuviTagSensorData]> = [

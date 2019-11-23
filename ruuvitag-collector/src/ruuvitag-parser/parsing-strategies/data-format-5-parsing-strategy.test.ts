@@ -1,5 +1,5 @@
-import DataFormat5ParsingStrategy from './data-format-5-parsing-strategy';
 import { RuuviTagSensorData } from '../index';
+import DataFormat5ParsingStrategy from './data-format-5-parsing-strategy';
 
 describe('Data Format 5 Parsing Strategy', () => {
     const testCases: Array<[string, RuuviTagSensorData]> = [

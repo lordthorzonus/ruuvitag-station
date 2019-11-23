@@ -1,6 +1,6 @@
 import { Peripheral } from 'noble';
-import { transformPeripheralAdvertisementToRuuviTagMeasurement } from '../ruuvi-tag-measurement-transformer';
 import { RuuviTagScannerEventHandler } from '../ruuvitag-collector';
+import { transformPeripheralAdvertisementToRuuviTagMeasurement } from '../ruuvitag-measurement-transformer';
 import { discoveredPeripheralLogger } from './discovered-peripheral-logger';
 import { updatedRuuviTagMeasurementLogger } from './updated-data-logger';
 
