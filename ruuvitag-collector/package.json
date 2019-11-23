@@ -19,9 +19,11 @@
   "license": "MIT",
   "dependencies": {
     "@abandonware/noble": "^1.9.2-5",
+    "@types/amqplib": "^0.5.13",
     "@types/lodash": "^4.14.141",
     "@types/noble": "0.0.39",
     "@types/uuid": "^3.4.6",
+    "amqplib": "^0.5.5",
     "dotenv": "^8.2.0",
     "influx": "^5.4.2",
     "lodash": "^4.17.15",
