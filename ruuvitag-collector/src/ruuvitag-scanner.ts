@@ -5,8 +5,8 @@ import { EventEmitter } from 'events';
 import { validateRuuviTag } from './ruuvitag-parser/ruuvitag-validator';
 
 export enum RuuviTagScannerEvents {
-    DiscoveredRuuviTag = 'DISCOVERED_RUUVI_TAG',
-    RuuviTagUpdated = 'UPDATED_RUUVI_TAG',
+    DiscoveredRuuviTag = 'DISCOVERED_RUUVITAG',
+    RuuviTagUpdated = 'UPDATED_RUUVITAG',
 }
 
 class RuuviTagScanner extends EventEmitter {

@@ -16,7 +16,7 @@ import { Peripheral } from 'noble';
 import {
     RuuviTagMeasurement,
     transformPeripheralAdvertisementToRuuviTagMeasurement,
-} from './ruuvi-tag-measurement-transformer';
+} from './ruuvitag-measurement-transformer';
 import { EnhancedRuuviTagSensorData } from './ruuvitag-sensor-data-decorator';
 
 describe('RuuviTag Measurement Transformer', () => {
