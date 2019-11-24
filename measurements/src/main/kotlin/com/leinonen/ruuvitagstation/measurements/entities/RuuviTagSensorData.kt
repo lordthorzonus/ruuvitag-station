@@ -11,7 +11,7 @@ data class RuuviTagSensorData (
     val measurementSequence: Long? = null,
     val movementCounter: Long? = null,
     val txPower: Long? = null,
-    val macAddress: Long? = null,
+    val macAddress: String? = null,
     val humidex: Long? = null,
     val heatIndex: Long? = null,
     val dewPoint: Double? = null,
