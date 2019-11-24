@@ -1,6 +1,60 @@
 # ruuvitag-station
 Weather station for usage with ruuvitags.
 
+## Domain events
+
+### New RuuviTag Measurement
+Emitted every time a RuuviTag advertises a new BLE advertisement.
+- Routing Key: `ruuvitag.measurement`
+- Exchange: `ruuvitag`
+- Body:
+```typescript
+type RuuviTagMeasurement = {
+  id: string;
+  time: Date;
+  peripheral: {
+    macAddress: string;
+    id: string;
+    rssi: number
+  };
+  sensorData: {
+    relativeHumidityPercentage: number;
+    temperature: number;
+    pressure: number;
+    accelerationX: number;
+    accelerationY: number;
+    accelerationZ: number;
+    batteryVoltage: number;
+    txPower: number;
+    movementCounter: number;
+    measurementSequence: number;
+    macAddress: string;
+    humidex: number;
+    heatIndex: number;
+    dewPoint: number;
+    absoluteHumidity: number;
+  }
+}
+```
+- Headers:
+    - `ruuvitag-collector-id`
+
+### New RuuviTag Discovered
+Emitted when a collector registers a new RuuviTag.
+
+- Routing Key: `ruuvitag.discovered`
+- Exchange: `ruuvitag`
+- Body:
+```typescript
+type RuuviTagDiscovered = {
+  macAddress: string;
+  id: string;
+  rssi: number
+};
+```
+- Headers:
+    - `ruuvitag-collector-id`
+
 ## Structure
 
 ### Ruuvitag collector
@@ -18,3 +72,30 @@ RABBITMQ_PROTOCOL=
 RABBITMQ_USERNAME=
 RABBITMQ_PASSWORD=
 ```
+
+
+### Measurements service
+Microservice which handles persisting the measurements to InfluxDB
+
+#### Environment variables
+Related to RabbitMQ connection:
+```
+RABBITMQ_HOSTNAME=
+RABBITMQ_PROTOCOL=
+RABBITMQ_USERNAME=
+RABBITMQ_PASSWORD=
+```
+
+Related to influxDB Connection:
+
+```
+INFLUX_DB_URL=
+INFLUX_DB_USERNAME=
+INFLUX_DB_PASSWORD=
+INFLUX_DB_DATABASE_NAME=
+```
+
+
+## External services
+- Grafana
+- Chronograf
