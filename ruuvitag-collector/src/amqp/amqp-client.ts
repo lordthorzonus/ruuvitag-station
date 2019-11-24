@@ -6,7 +6,7 @@ import { RuuviTag, RuuviTagMeasurement } from '../ruuvitag-measurement-transform
 const RUUVITAG_EXCHANGE = 'ruuvitag';
 enum RuuviTagRoutingKeys {
     RuuviTagDiscovered = 'ruuvitag.discovered',
-    RuuviTagNewMeasurement = 'ruuvitag.new-measurement',
+    RuuviTagNewMeasurement = 'ruuvitag.measurement',
 }
 
 export const amqpConnection = connect(
@@ -24,7 +24,6 @@ export const ruuviTagExchange = amqpConnection.then(
         channel => channel.assertExchange(RUUVITAG_EXCHANGE, 'topic').then(() => channel),
     ),
 );
-
 const publishMessage = async <T extends object>(routingKey: RuuviTagRoutingKeys, messageBody: T) => {
     const exchange = await ruuviTagExchange;
     const messageId = uuid();
@@ -32,6 +31,7 @@ const publishMessage = async <T extends object>(routingKey: RuuviTagRoutingKeys,
         appId: 'ruuvitag-collector',
         messageId,
         correlationId: messageId,
+        type: routingKey,
         contentType: 'application/json',
         headers: {
             'ruuvitag-collector-id': config.collectorId,
