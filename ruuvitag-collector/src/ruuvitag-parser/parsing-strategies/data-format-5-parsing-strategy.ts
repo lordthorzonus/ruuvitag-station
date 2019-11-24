@@ -115,7 +115,7 @@ const parseAcceleration = (rawData: Buffer, accelerationOffset: ValueOffset): nu
 const parseBatteryVoltage = (rawData: Buffer): number | null => {
     const powerInfo = parse16BitInteger(rawData, PowerInfoOffset);
     const minimumVoltage = 1600;
-    const max11BitUnsignedInteger = Math.pow(2, 11);
+    const max11BitUnsignedInteger = 2047;
 
     const voltage = (powerInfo >>> 5);
 
@@ -157,7 +157,7 @@ const parseTxPower = (rawData: Buffer): number | null => {
  */
 const parseMovementCounter = (rawData: Buffer): number | null => {
     const movementCounter = parse8BitInteger(rawData, MovementCounterOffset);
-    const max8BitValue = Math.pow(2, 8);
+    const max8BitValue = 255;
 
     if (movementCounter === max8BitValue) {
         return null;
