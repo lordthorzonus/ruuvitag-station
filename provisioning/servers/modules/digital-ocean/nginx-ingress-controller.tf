@@ -28,9 +28,21 @@ resource "helm_release" "nginx_ingress_controller" {
   chart = "stable/nginx-ingress"
 
   set {
-    name = "prometheus.create"
+    name = "controller.metrics.enabled"
     value = "true"
   }
+
+  set {
+    name = "controller.metrics.enabled"
+    value = "true"
+  }
+
+  set {
+    name = "controller.metrics.serviceMonitor.enabled"
+    value = "true"
+  }
+
+
 }
 
 data "kubernetes_service" "nginx_ingress_controller" {

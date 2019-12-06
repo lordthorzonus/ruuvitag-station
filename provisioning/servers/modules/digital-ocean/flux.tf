@@ -9,14 +9,25 @@ data "helm_repository" "fluxcd" {
   url = "https://charts.fluxcd.io"
 }
 
+locals {
+  helm_release_crd_file = "https://raw.githubusercontent.com/fluxcd/flux/helm-0.10.1/deploy-helm/flux-helm-release-crd.yaml"
+}
+
 resource "null_resource" "flux_helm_operator_crd" {
+  triggers = {
+    crd_file = local.helm_release_crd_file
+  }
+
   provisioner "local-exec" {
-    command = "kubectl --token=${local.k8s_cluster.token} --server=${local.k8s_cluster.endpoint} apply -f https://raw.githubusercontent.com/fluxcd/helm-operator/master/deploy/flux-helm-release-crd.yaml"
+    command = "echo \"${local.k8s_cluster.ca_certificate}\" > ca-certificate.pem"
+  }
+  provisioner "local-exec" {
+    command = "kubectl --token=${local.k8s_cluster.token} --server=${local.k8s_cluster.endpoint} apply -f ${local.helm_release_crd_file}"
   }
 }
 
 resource "helm_release" "flux" {
-  depends_on = [helm_release.nginx_ingress_controller]
+  depends_on = [helm_release.nginx_ingress_controller, null_resource.flux_helm_operator_crd]
   chart = "fluxcd/flux"
   name = "flux"
   namespace = kubernetes_namespace.flux.metadata.0.name
