@@ -1,8 +1,3 @@
-data "helm_repository" "nginx_stable" {
-  name = "nginx-stable"
-  url = "https://helm.nginx.com/stable"
-}
-
 resource "kubernetes_service_account" "tiller_service_account" {
   metadata {
     name = "tiller"
@@ -29,10 +24,8 @@ resource "kubernetes_cluster_role_binding" "tiller_cluster_role_binding" {
 
 resource "helm_release" "nginx_ingress_controller" {
   depends_on = [kubernetes_cluster_role_binding.tiller_cluster_role_binding]
-  chart = "nginx-ingress"
-  name = "nginx-ingress-controller"
-  repository = data.helm_repository.nginx_stable.metadata.0.name
-  version = "0.3.8"
+  name = "ingress"
+  chart = "stable/nginx-ingress"
 
   set {
     name = "prometheus.create"
@@ -44,11 +37,15 @@ data "kubernetes_service" "nginx_ingress_controller" {
   depends_on = [helm_release.nginx_ingress_controller]
 
   metadata {
-    name      = "${helm_release.nginx_ingress_controller.metadata[0].name}-nginx-ingress"
+    name = "${helm_release.nginx_ingress_controller.metadata[0].name}-nginx-ingress-controller"
     namespace = helm_release.nginx_ingress_controller.metadata[0].namespace
   }
 }
 
+locals {
+  load_balancer_ip = data.kubernetes_service.nginx_ingress_controller.load_balancer_ingress.0.ip
+}
+
 output "load_balancer_ip" {
-  value = data.kubernetes_service.nginx_ingress_controller.load_balancer_ingress.0.ip
+  value = local.load_balancer_ip
 }

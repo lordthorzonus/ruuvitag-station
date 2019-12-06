@@ -1,16 +1,12 @@
-variable "rabbitmq_domain_name" {
+variable "main_domain_name" {
   type = string
 }
 
-variable "rabbitmq_domain_ip" {
+variable "cluster_sub_domain_name" {
   type = string
 }
 
-variable "grafana_domain_name" {
-  type = string
-}
-
-variable "grafana_domain_ip" {
+variable "cluster_sub_domain_ip" {
   type = string
 }
 

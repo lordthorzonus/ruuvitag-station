@@ -18,4 +18,6 @@ variable "k8s_version" {
   default = "1.16.2-do.0"
 }
 
-variable "grafana_domain_name" {}
+variable "github_kubernetes_manifests_repository" {
+  default = "git@github.com:lordthorzonus/ruuvitag-station-k8s.git"
+}

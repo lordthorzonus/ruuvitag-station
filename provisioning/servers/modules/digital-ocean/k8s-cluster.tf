@@ -22,6 +22,7 @@ locals {
     endpoint = digitalocean_kubernetes_cluster.k8s_cluster.endpoint
     token = digitalocean_kubernetes_cluster.k8s_cluster.kube_config.0.token
     ca_certificate = base64decode(digitalocean_kubernetes_cluster.k8s_cluster.kube_config.0.cluster_ca_certificate)
+    kube_config = digitalocean_kubernetes_cluster.k8s_cluster.kube_config
   }
 }
 

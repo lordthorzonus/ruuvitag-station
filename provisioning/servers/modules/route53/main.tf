@@ -1,25 +1,12 @@
-resource "aws_route53_zone" "grafana" {
-  name = var.grafana_domain_name
+data "aws_route53_zone" "main_domain" {
+  name = var.main_domain_name
 }
 
-resource "aws_route53_record" "grafana-a-record" {
-  zone_id = aws_route53_zone.grafana.zone_id
-  name    = var.grafana_domain_name
+resource "aws_route53_record" "cluster_sub_domain_a_record" {
+  zone_id = data.aws_route53_zone.main_domain.zone_id
+  name    = var.cluster_sub_domain_name
   type    = "A"
   ttl     = "300"
 
-  records = [var.grafana_domain_ip]
-}
-
-resource "aws_route53_zone" "rabbitmq" {
-  name = var.rabbitmq_domain_name
-}
-
-resource "aws_route53_record" "rabbitmq-a-record" {
-  zone_id = aws_route53_zone.rabbitmq.zone_id
-  name    = var.rabbitmq_domain_name
-  type    = "A"
-  ttl     = "300"
-
-  records = [var.rabbitmq_domain_ip]
+  records = [var.cluster_sub_domain_ip]
 }
