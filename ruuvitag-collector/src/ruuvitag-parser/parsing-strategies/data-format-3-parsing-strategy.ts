@@ -1,23 +1,24 @@
-import { parse16BitInteger, parse8BitInteger, twosComplement, ValueOffset } from '../byte-utils';
 import { RuuviTagParsingStrategy} from '../index';
 
-const HumidityOffset: ValueOffset = [3, 3];
-const TemperatureBaseOffset: ValueOffset = [4, 4];
-const TemperatureFractionOffset: ValueOffset = [5, 5];
-const PressureOffset: ValueOffset = [6, 7];
-const AccelerationXOffset: ValueOffset = [8, 9];
-const AccelerationYOffset: ValueOffset = [10, 11];
-const AccelerationZOffset: ValueOffset = [12, 13];
-const BatteryOffset: ValueOffset = [14, 15];
+enum DataFormatV3Offset {
+    Humidity = 3,
+    TemperatureBase = 4,
+    TemperatureFraction = 5,
+    Pressure = 6,
+    AccelerationX = 8,
+    AccelerationY = 10,
+    AccelerationZ = 12,
+    BatteryVoltage = 14,
+}
 
 /**
  * Parses the acceleration data from the advertisement.
- * Values are 2-complement 16 bit signed integers. All channels are identical.
+ * Values are 16 bit signed integers. All channels are identical.
  *
  * @return Returns values in G.
  */
-const parseAcceleration = (rawData: Buffer, dataOffset: ValueOffset): number => {
-    const acceleration = twosComplement(parse16BitInteger(rawData, dataOffset));
+const parseAcceleration = (rawData: Buffer, dataOffset: DataFormatV3Offset): number => {
+    const acceleration = rawData.readInt16BE(dataOffset);
     return acceleration / 1000;
 };
 
@@ -28,12 +29,12 @@ const parseAcceleration = (rawData: Buffer, dataOffset: ValueOffset): number => 
  * @return Returns the value in Celsius (C).
  */
 const parseTemperature = (rawData: Buffer): number => {
-    const temperatureByte = parse8BitInteger(rawData, TemperatureBaseOffset);
+    const temperatureByte = rawData.readUInt8(DataFormatV3Offset.TemperatureBase);
 
     // First bit is the sign bit, which tells if the temperature is negative.
     const temperatureBase = temperatureByte & 0x7F;
     const isTemperatureNegative = ((temperatureByte >> 7) & 1) === 1;
-    const temperatureFraction = parse8BitInteger(rawData, TemperatureFractionOffset) / 100;
+    const temperatureFraction = rawData.readUInt8(DataFormatV3Offset.TemperatureFraction) / 100;
 
     const temperature = temperatureBase + temperatureFraction;
 
@@ -47,7 +48,7 @@ const parseTemperature = (rawData: Buffer): number => {
  * @return Returns the value in percents (%)
  */
 const parseRelativeHumidity = (rawData: Buffer): number => {
-    return parse8BitInteger(rawData, HumidityOffset) * 0.5;
+    return rawData.readUInt8(DataFormatV3Offset.Humidity) * 0.5;
 };
 
 /**
@@ -56,7 +57,7 @@ const parseRelativeHumidity = (rawData: Buffer): number => {
  * @return Returns the value in Volts (V).
  */
 const parseBatteryVoltage = (rawData: Buffer): number => {
-    return parse16BitInteger(rawData, BatteryOffset) / 1000;
+    return rawData.readUInt16BE(DataFormatV3Offset.BatteryVoltage) / 1000;
 };
 
 /**
@@ -73,7 +74,7 @@ const parseBatteryVoltage = (rawData: Buffer): number => {
  */
 const parsePressure = (rawData: Buffer): number => {
     const minimumSupportedPascalMeasurement = 50000;
-    return parse16BitInteger(rawData, PressureOffset) + minimumSupportedPascalMeasurement;
+    return rawData.readUInt16BE(DataFormatV3Offset.Pressure) + minimumSupportedPascalMeasurement;
 };
 
 /**
@@ -83,9 +84,9 @@ const parsePressure = (rawData: Buffer): number => {
 const DataFormat3ParsingStrategy: RuuviTagParsingStrategy = {
     parse(rawRuuviTagData) {
         return {
-            accelerationX: parseAcceleration(rawRuuviTagData, AccelerationXOffset),
-            accelerationY: parseAcceleration(rawRuuviTagData, AccelerationYOffset),
-            accelerationZ: parseAcceleration(rawRuuviTagData, AccelerationZOffset),
+            accelerationX: parseAcceleration(rawRuuviTagData, DataFormatV3Offset.AccelerationX),
+            accelerationY: parseAcceleration(rawRuuviTagData, DataFormatV3Offset.AccelerationY),
+            accelerationZ: parseAcceleration(rawRuuviTagData, DataFormatV3Offset.AccelerationZ),
             batteryVoltage: parseBatteryVoltage(rawRuuviTagData),
             relativeHumidityPercentage: parseRelativeHumidity(rawRuuviTagData),
             pressure: parsePressure(rawRuuviTagData),

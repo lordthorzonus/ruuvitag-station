@@ -28,8 +28,8 @@ describe('RuuviTagScanner', () => {
         const scanner = new RuuviTagScanner();
         scanner.startScanning();
 
-        expect(mockedNobleEventListener).toHaveBeenCalledWith('discover', jasmine.any(Function));
-        expect(mockedNobleEventListener).toHaveBeenCalledWith('stateChange', jasmine.any(Function));
+        expect(mockedNobleEventListener).toHaveBeenCalledWith('discover', expect.any(Function));
+        expect(mockedNobleEventListener).toHaveBeenCalledWith('stateChange', expect.any(Function));
     });
 
     it('should call nobles start scanning when noble emits that it is ready to scan', () => {

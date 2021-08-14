@@ -1,5 +1,5 @@
 import { connect } from 'amqplib';
-import * as uuid from 'uuid/v4';
+import { v4 } from 'uuid';
 import config from '../config';
 import { RuuviTag, RuuviTagMeasurement } from '../ruuvitag-measurement-transformer';
 
@@ -26,7 +26,7 @@ export const ruuviTagExchange = amqpConnection.then(
 );
 const publishMessage = async <T extends object>(routingKey: RuuviTagRoutingKeys, messageBody: T) => {
     const exchange = await ruuviTagExchange;
-    const messageId = uuid();
+    const messageId = v4();
     return exchange.publish(RUUVITAG_EXCHANGE, routingKey, Buffer.from(JSON.stringify(messageBody)), {
         appId: 'ruuvitag-collector',
         messageId,

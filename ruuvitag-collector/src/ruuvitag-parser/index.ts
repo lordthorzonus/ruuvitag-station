@@ -1,7 +1,6 @@
-import { parse16BitInteger, parse8BitInteger, ValueOffset } from './byte-utils';
 import DataFormat3ParsingStrategy from './parsing-strategies/data-format-3-parsing-strategy';
 import DataFormat5ParsingStrategy from './parsing-strategies/data-format-5-parsing-strategy';
-import { ruuviTagManufacturerIdLeastSignificantByteFirst, validateRuuviTag } from './ruuvitag-validator';
+import { ruuviTagManufacturerId, validateRuuviTag } from './ruuvitag-validator';
 
 type Nullable<T> = T | null;
 
@@ -29,8 +28,10 @@ enum RuuvitagSensorProtocolDataFormat {
     DataFormat5 = 0x05,
 }
 
-const ManufacturerIdOffset: ValueOffset = [0, 1];
-const DataFormatOffset: ValueOffset = [2, 2];
+enum RuuviTagDataOffsets {
+    ManufacturedIdOffset = 0,
+    DataFormatOffset = 2,
+}
 
 const DataFormatParsingStrategyMap = new Map<RuuvitagSensorProtocolDataFormat, RuuviTagParsingStrategy>([
     [RuuvitagSensorProtocolDataFormat.DataFormat3, DataFormat3ParsingStrategy],
@@ -40,15 +41,15 @@ const DataFormatParsingStrategyMap = new Map<RuuvitagSensorProtocolDataFormat, R
 const throwNotValidManufacturerIdError = (manufacturerId: number) => {
     throw Error(
         `Not a valid RuuviTag payload. Got manufacturerId: 0x${
-            manufacturerId.toString(16)
+            manufacturerId.toString(16).padStart(4, '0')
         }, expected: 0x${
-            ruuviTagManufacturerIdLeastSignificantByteFirst.toString(16)
+            ruuviTagManufacturerId.toString(16).padStart(4, '0')
         }`,
     );
 };
 
 const validate = (rawRuuviTagData: Buffer) => {
-    const manufacturerId = parse16BitInteger(rawRuuviTagData, ManufacturerIdOffset);
+    const manufacturerId = rawRuuviTagData.readUInt16LE(RuuviTagDataOffsets.ManufacturedIdOffset);
 
     if (!validateRuuviTag(rawRuuviTagData)) {
         throwNotValidManufacturerIdError(manufacturerId);
@@ -56,7 +57,7 @@ const validate = (rawRuuviTagData: Buffer) => {
 };
 
 const resolveParsingStrategy = (rawRuuviTagData: Buffer): RuuviTagParsingStrategy => {
-    const dataFormat = parse8BitInteger(rawRuuviTagData, DataFormatOffset);
+    const dataFormat = rawRuuviTagData.readUInt8(RuuviTagDataOffsets.DataFormatOffset);
     const parsingStrategy = DataFormatParsingStrategyMap.get(dataFormat);
 
     if (!parsingStrategy) {

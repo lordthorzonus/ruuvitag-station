@@ -1,19 +1,20 @@
-import { parse16BitInteger, parse8BitInteger, twosComplement, ValueOffset } from '../byte-utils';
 import { RuuviTagParsingStrategy } from '../index';
 
-const TemperatureOffset: ValueOffset = [3, 4];
-const HumidityOffset: ValueOffset = [5, 6];
-const PressureOffset: ValueOffset = [7, 8];
-const AccelerationXOffset: ValueOffset = [9, 10];
-const AccelerationYOffset: ValueOffset = [11, 12];
-const AccelerationZOffset: ValueOffset = [13, 14];
-const PowerInfoOffset: ValueOffset = [15, 16];
-const MovementCounterOffset: ValueOffset = [17, 17];
-const MeasurementSequenceOffset: ValueOffset = [18, 19];
-const MacAddressOffset: ValueOffset = [20, 26];
+enum DataFormatV5Offset {
+    Temperature = 3,
+    Humidity = 5,
+    Pressure = 7,
+    AccelerationX = 9,
+    AccelerationY = 11,
+    AccelerationZ = 13,
+    PowerInfo = 15,
+    MovementCounter = 17,
+    MeasurementSequence = 18,
+    MacAddress = 20,
+}
 
 const isInvalidMeasurementForSigned16BitInteger = (value: number): boolean => {
-    return value === 0x8000;
+    return value === 0x8000 || value === -0x8000;
 };
 
 const isInvalidMeasurementForUnsigned16BitInteger = (value: number) => {
@@ -29,14 +30,14 @@ const isInvalidMeasurementForUnsigned16BitInteger = (value: number) => {
 const parseTemperature = (
     rawData: Buffer,
 ): number | null => {
-    const temperature = parse16BitInteger(rawData, TemperatureOffset);
+    const temperature = rawData.readInt16BE(DataFormatV5Offset.Temperature);
     const degreeIncrements = 0.005;
 
     if (isInvalidMeasurementForSigned16BitInteger(temperature)) {
         return null;
     }
 
-    return twosComplement(temperature) * degreeIncrements;
+    return temperature * degreeIncrements;
 
 };
 
@@ -56,7 +57,7 @@ const parseTemperature = (
  * @return Returns the value in percents (%)
  */
 const parseRelativeHumidity = (rawData: Buffer): number | null => {
-    const humidity = parse16BitInteger(rawData, HumidityOffset);
+    const humidity = rawData.readUInt16BE(DataFormatV5Offset.Humidity);
     const percentageIncrements = 0.0025;
 
     if (isInvalidMeasurementForUnsigned16BitInteger(humidity)) {
@@ -79,7 +80,7 @@ const parseRelativeHumidity = (rawData: Buffer): number | null => {
  * @return Returns the pressure in Pascals (Pa).
  */
 const parsePressure = (rawData: Buffer): number | null => {
-    const pressure = parse16BitInteger(rawData, PressureOffset);
+    const pressure = rawData.readUInt16BE(DataFormatV5Offset.Pressure);
     const minimumSupportedPascalMeasurement = 50000;
 
     if (isInvalidMeasurementForUnsigned16BitInteger(pressure)) {
@@ -91,18 +92,18 @@ const parsePressure = (rawData: Buffer): number | null => {
 
 /**
  * Parses the acceleration data from the advertisement.
- * Values are 2-complement 16 bit signed integers. All channels are identical.
+ * Values are 16 bit signed integers. All channels are identical.
  *
  * @return Returns values in G.
  */
-const parseAcceleration = (rawData: Buffer, accelerationOffset: ValueOffset): number | null => {
-    const acceleration = parse16BitInteger(rawData, accelerationOffset);
+const parseAcceleration = (rawData: Buffer, accelerationOffset: DataFormatV5Offset): number | null => {
+    const acceleration = rawData.readInt16BE(accelerationOffset);
 
     if (isInvalidMeasurementForSigned16BitInteger(acceleration)) {
         return null;
     }
 
-    return twosComplement(acceleration) / 1000;
+    return acceleration / 1000;
 };
 
 /**
@@ -113,7 +114,7 @@ const parseAcceleration = (rawData: Buffer, accelerationOffset: ValueOffset): nu
  * @return Returns the value in Volts (V).
  */
 const parseBatteryVoltage = (rawData: Buffer): number | null => {
-    const powerInfo = parse16BitInteger(rawData, PowerInfoOffset);
+    const powerInfo = rawData.readUInt16BE(DataFormatV5Offset.PowerInfo);
     const minimumVoltage = 1600;
     const max11BitUnsignedInteger = 2047;
 
@@ -134,7 +135,7 @@ const parseBatteryVoltage = (rawData: Buffer): number | null => {
  * @return Returns the value in dBm.
  */
 const parseTxPower = (rawData: Buffer): number | null => {
-    const powerInfo = parse16BitInteger(rawData, PowerInfoOffset);
+    const powerInfo = rawData.readUInt16BE(DataFormatV5Offset.PowerInfo);
     const max5BitUnsignedInteger = 31;
     const dBmIncrement = 2;
     const minimumDBm = -40;
@@ -156,7 +157,7 @@ const parseTxPower = (rawData: Buffer): number | null => {
  * @return Movement counter as number
  */
 const parseMovementCounter = (rawData: Buffer): number | null => {
-    const movementCounter = parse8BitInteger(rawData, MovementCounterOffset);
+    const movementCounter = rawData.readUInt8(DataFormatV5Offset.MovementCounter);
     const max8BitValue = 255;
 
     if (movementCounter === max8BitValue) {
@@ -174,7 +175,7 @@ const parseMovementCounter = (rawData: Buffer): number | null => {
  * @return Returns the measurement sequence as number.
  */
 const parseMeasurementSequence = (rawData: Buffer): number | null => {
-    const measurementSequence = parse16BitInteger(rawData, MeasurementSequenceOffset);
+    const measurementSequence = rawData.readUInt16BE(DataFormatV5Offset.MeasurementSequence);
 
     if (isInvalidMeasurementForUnsigned16BitInteger(measurementSequence)) {
         return null;
@@ -190,9 +191,9 @@ const parseMeasurementSequence = (rawData: Buffer): number | null => {
  * @return Returns the 48bit MAC address as string.
  */
 const parseMacAddress = (rawData: Buffer): string | null => {
-    const macAddressData = rawData.slice(MacAddressOffset[0], MacAddressOffset[1]);
+    const macAddressData = rawData.readUIntBE(DataFormatV5Offset.MacAddress, 6);
     const invalidMacAddress = 'ffffffffffff';
-    const macAddress = macAddressData.toString('hex');
+    const macAddress = macAddressData.toString(16);
 
     if (macAddress === invalidMacAddress) {
         return null;
@@ -213,9 +214,9 @@ const DataFormat5ParsingStrategy: RuuviTagParsingStrategy = {
             temperature: parseTemperature(rawRuuviTagData),
             relativeHumidityPercentage: parseRelativeHumidity(rawRuuviTagData),
             pressure: parsePressure(rawRuuviTagData),
-            accelerationX: parseAcceleration(rawRuuviTagData, AccelerationXOffset),
-            accelerationY: parseAcceleration(rawRuuviTagData, AccelerationYOffset),
-            accelerationZ: parseAcceleration(rawRuuviTagData, AccelerationZOffset),
+            accelerationX: parseAcceleration(rawRuuviTagData, DataFormatV5Offset.AccelerationX),
+            accelerationY: parseAcceleration(rawRuuviTagData, DataFormatV5Offset.AccelerationY),
+            accelerationZ: parseAcceleration(rawRuuviTagData, DataFormatV5Offset.AccelerationZ),
             batteryVoltage: parseBatteryVoltage(rawRuuviTagData),
             txPower: parseTxPower(rawRuuviTagData),
             movementCounter: parseMovementCounter(rawRuuviTagData),

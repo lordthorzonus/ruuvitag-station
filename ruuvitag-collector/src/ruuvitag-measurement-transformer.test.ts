@@ -8,8 +8,8 @@ jest.mock('./ruuvitag-sensor-data-decorator');
 import decorateRuuviTagSensorDataWithCalculatedValues from './ruuvitag-sensor-data-decorator';
 const mockedRuuviTagDecorator = decorateRuuviTagSensorDataWithCalculatedValues as jest.Mock;
 
-jest.mock('uuid/v4');
-import * as uuid from 'uuid/v4';
+jest.mock('uuid');
+import { v4 as uuid } from 'uuid';
 const mockedUuid = uuid as jest.Mock;
 
 import { Peripheral } from 'noble';

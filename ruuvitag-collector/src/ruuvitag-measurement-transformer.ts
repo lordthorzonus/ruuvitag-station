@@ -1,6 +1,6 @@
 import { Peripheral } from '@abandonware/noble';
 import { flow } from 'lodash';
-import * as uuid from 'uuid/v4';
+import { v4 as uuid }  from 'uuid';
 import parse from './ruuvitag-parser';
 import decorateRuuviTagSensorDataWithCalculatedValues, { EnhancedRuuviTagSensorData } from './ruuvitag-sensor-data-decorator';
 
